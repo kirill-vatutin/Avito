@@ -1,8 +1,16 @@
 using Avito.Infrastructure;
+using Avito.Infrastructure.Store;
+using Avito.Logic.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddScoped<ICategoryStore, CategoryStore>();
+builder.Services.AddScoped<IRoleStore, RoleStore>();
+builder.Services.AddScoped<IProductStore, ProductStore>();
+builder.Services.AddScoped<IUserStore,UserStore>();
 
 // Add services to the container.
 string? connection =
