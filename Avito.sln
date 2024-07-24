@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avito", "Avito\Avito.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avito.Logic", "Avito.Logic\Avito.Logic.csproj", "{B4EE2A89-BB8A-48F3-B533-517CF80A62D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avito.Infrastructure", "Avito.Infrastructure\Avito.Infrastructure.csproj", "{4669CA79-1E59-4EF4-98A1-92E1A1938565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B4EE2A89-BB8A-48F3-B533-517CF80A62D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4EE2A89-BB8A-48F3-B533-517CF80A62D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4EE2A89-BB8A-48F3-B533-517CF80A62D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4669CA79-1E59-4EF4-98A1-92E1A1938565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4669CA79-1E59-4EF4-98A1-92E1A1938565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4669CA79-1E59-4EF4-98A1-92E1A1938565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4669CA79-1E59-4EF4-98A1-92E1A1938565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
