@@ -11,9 +11,9 @@ namespace Avito.Logic.Stores
     {
 
         Task<IReadOnlyList<Product>> Get();
-        Task<IReadOnlyList<Product>> GetByCategory(Category category);
+        Task<IReadOnlyList<Product?>> GetByCategory(Category category);
 
-        Task<Product> GetByName(string name);
+        Task<Product?> GetByName(string name);
         Task Add(Product product);
 
     }

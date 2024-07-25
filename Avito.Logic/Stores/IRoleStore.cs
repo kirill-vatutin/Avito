@@ -6,5 +6,9 @@ namespace Avito.Logic.Stores
     {
         Task<IReadOnlyList<Role>> Get();
         Task Add(Role role);
+        Task<Role?> GetById(int id);
+        Task Update(Role name);
+        Task Delete(Role role);
+
     }
 }

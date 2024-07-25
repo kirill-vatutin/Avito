@@ -26,7 +26,7 @@ namespace Avito.Infrastructure.Store
             return products;
         }
 
-        public async Task<IReadOnlyList<Product>> GetByCategory(Category category)
+        public async Task<IReadOnlyList<Product?>> GetByCategory(Category category)
         {
             IQueryable<Product> productsUQue = _context.Products;
             var products = productsUQue.Where(u => u.CategoryId == category.Id);

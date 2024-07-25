@@ -17,13 +17,18 @@ namespace Avito.Infrastructure.Store
         public async Task<IReadOnlyList<User>> Get()
         {
             var users = _context.Users;
-            return users.AsNoTracking().ToList();
+            return await  users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User?> GetByEmail(string email)
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             return user;
+        }
+
+        public Task Update(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }
