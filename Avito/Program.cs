@@ -1,28 +1,67 @@
 using Avito.Infrastructure;
+using Avito.Infrastructure.Auth;
+using Avito.Infrastructure.Auth.Interfaces;
+using Avito.Infrastructure.Services;
 using Avito.Infrastructure.Store;
 using Avito.Logic.Stores;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
+
+services.Configure<JwtOptions>(
+    configuration.GetSection(nameof(JwtOptions)));
+
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,options=>
+    {
+         var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["tasty"];
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 
-builder.Services.AddScoped<ICategoryStore, CategoryStore>();
-builder.Services.AddScoped<IRoleStore, RoleStore>();
-builder.Services.AddScoped<IProductStore, ProductStore>();
-builder.Services.AddScoped<IUserStore,UserStore>();
+services.AddScoped<ICategoryStore, CategoryStore>();
+services.AddScoped<IRoleStore, RoleStore>();
+services.AddScoped<IProductStore, ProductStore>();
+services.AddScoped<IUserStore, UserStore>();
+
+services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+services.AddScoped<UsersService>();
+services.AddScoped<IJwtProvider, JwtProvider>();
+services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // Add services to the container.
 string? connection =
     builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AvitoDbContext>(
+services.AddDbContext<AvitoDbContext>(
     options => options.UseNpgsql(connection, b => b.MigrationsAssembly("Avito")));
 
 
-builder.Services.AddControllers();
+services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 
 var app = builder.Build();
@@ -36,6 +75,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

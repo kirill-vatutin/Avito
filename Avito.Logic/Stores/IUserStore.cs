@@ -12,11 +12,13 @@ namespace Avito.Logic.Stores
         Task<IReadOnlyList<User>> Get();
        
         Task<User?> GetByEmail(string name);
+        Task<User?> GetById(int id);
         Task Add(User user);
 
         Task Update(User user);
+           
+        Task Delete(User user);
 
-     
-
+        Task<int> GetRoleIdUser();
     }
 }

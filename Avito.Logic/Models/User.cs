@@ -11,5 +11,22 @@
         public Role? Role;
 
         public IList<Product>? Products = null;
+
+        public User()
+        {
+        }
+        private User(string firstName, string lastName, string email, string hashedPassword,int roleId)
+        {
+            Firstname = firstName;
+            Lastname = lastName;
+            Email = email;
+            PasswordHash = hashedPassword;
+            RoleId = roleId;
+        }
+
+        public static User Create(string firstName, string lastName, string email, string hashedPassword,int roleId)
+        {
+            return new User(firstName, lastName, email, hashedPassword,roleId);
+        }
     }
 }
