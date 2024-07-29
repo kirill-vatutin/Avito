@@ -5,8 +5,8 @@ using Avito.Infrastructure.Services;
 using Avito.Infrastructure.Store;
 using Avito.Logic.Stores;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -18,9 +18,9 @@ services.Configure<JwtOptions>(
     configuration.GetSection(nameof(JwtOptions)));
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,options=>
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-         var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+        var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
         options.TokenValidationParameters = new()
         {
@@ -39,6 +39,11 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("RoleId", "1"));
+    options.AddPolicy("UserOnly", policy => policy.RequireClaim("RoleId", "2"));
+});
 
 
 services.AddScoped<ICategoryStore, CategoryStore>();
@@ -74,6 +79,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

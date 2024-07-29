@@ -13,8 +13,11 @@ namespace Avito.Logic.Stores
         Task<IReadOnlyList<Product>> Get();
         Task<IReadOnlyList<Product?>> GetByCategory(Category category);
 
-        Task<Product?> GetByName(string name);
+        Task<IEnumerable<Product?>> GetByName(string name);
         Task Add(Product product);
 
+        Task Delete(int id);
+        Task<Product?> GetById(int id);
+        Task Update(Product product);
     }
 }

@@ -19,7 +19,10 @@ namespace Avito.Infrastructure.Auth
 
         public string GenerateToken(User user)
         {
-            Claim[] claims = new Claim[] { new Claim("userId", user.Id.ToString()) };
+            Claim[] claims = new Claim[] { 
+                new Claim("userId", user.Id.ToString()),
+                new Claim("RoleId",user.RoleId.ToString())
+            };
 
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),

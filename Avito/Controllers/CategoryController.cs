@@ -8,7 +8,7 @@ namespace Avito.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryStore _repository;

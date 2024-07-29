@@ -1,5 +1,6 @@
 ﻿using Avito.Logic.Models;
 using Avito.Logic.Stores;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace Avito.Infrastructure.Store
             await _context.SaveChangesAsync();
         }
 
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<Product>> Get()
         {
             var products = await _context.Products.AsNoTracking().ToListAsync();
@@ -33,10 +39,27 @@ namespace Avito.Infrastructure.Store
             return await  productsUQue.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Product?> GetByName(string name)
+        public async Task<Product?> GetById(int id)
         {
-            Product? product = await _context.Products.FirstOrDefaultAsync(u => u.Name == name);
+            Product? product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             return product;
+        }
+
+        public async Task<IEnumerable<Product?>> GetByName(string name)
+        {
+            IQueryable<Product> products =  _context.Products.AsNoTracking();
+            var productsList = products.Where(p => EF.Functions.Like(p.Name, $"%{name }%"));
+            return await productsList.ToListAsync();
+        }
+
+        public async Task Update(Product product)
+        {
+            await _context.Products.Where(u => u.Id == product.Id).ExecuteUpdateAsync(s => s
+            .SetProperty(u => u.Name, product.Name)
+            .SetProperty(u => u.Description, product.Description)
+            .SetProperty(u => u.Price, product.Price)
+            .SetProperty(u => u.CategoryId, product.CategoryId)
+            );
         }
     }
 }

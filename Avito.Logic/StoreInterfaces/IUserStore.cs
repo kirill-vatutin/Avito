@@ -20,5 +20,8 @@ namespace Avito.Logic.Stores
         Task Delete(User user);
 
         Task<int> GetRoleIdUser();
+
+        Task<bool> VerifyUser(int tokenUserId, int userId);
+        Task<int> GetUserIdFromJwt(string token);
     }
 }

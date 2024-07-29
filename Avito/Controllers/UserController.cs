@@ -2,6 +2,7 @@
 using Avito.Infrastructure.Services;
 using Avito.Logic.Models;
 using Avito.Logic.Stores;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Avito.Controllers
@@ -62,17 +63,8 @@ namespace Avito.Controllers
         }
 
 
-        [HttpPost]
-        [Route("add")]
-        public async Task<ActionResult> Post([FromBody] User user)
-        {
-            await _repository.Add(user);
-            return Ok();
-
-        }
-
-
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<ActionResult> Delete(int id)
         {
             User? user = await _repository.GetById(id);

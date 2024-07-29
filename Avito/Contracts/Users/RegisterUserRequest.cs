@@ -7,6 +7,7 @@ namespace Avito.Contracts.Users
         [Required]  string FirstName, 
         [Required]  string Lastname ,
         [Required]  string Password,
-        [Required]  string Email 
+        [Required]  string Email
+       
     );
 }

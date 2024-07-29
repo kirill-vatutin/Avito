@@ -1,5 +1,6 @@
 ﻿using Avito.Logic.Models;
 using Avito.Logic.Stores;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -7,6 +8,7 @@ namespace Avito.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AdminOnly")]
     public class RoleController : ControllerBase
     {
 

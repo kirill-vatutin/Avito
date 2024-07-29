@@ -2,6 +2,7 @@
 using Avito.Logic.Models;
 using Avito.Logic.Stores;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Avito.Infrastructure.Store
 {
@@ -46,7 +47,7 @@ namespace Avito.Infrastructure.Store
         }
         public async Task<int> GetRoleIdUser()
         {
-            var role = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(u => u.Name == "user");
+            Role? role = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(u => u.Name == "user");
             return role.Id;
         }
      
@@ -56,6 +57,21 @@ namespace Avito.Infrastructure.Store
             throw new NotImplementedException();
         }
 
+        public async Task<int> GetUserIdFromJwt(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var userIdClaim = jwtToken.Claims.First(claim => claim.Type == "userId");
+
+            int tokenUserId = Convert.ToInt32(userIdClaim.Value);
+            return tokenUserId;
+        }
+
+       public async Task<bool> VerifyUser(int tokenUserId, int userId)
+        {
+        
+            return tokenUserId == userId; 
+        }
 
     }
 }
