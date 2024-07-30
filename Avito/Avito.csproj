@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Avito.Application\Avito.Application.csproj" />
     <ProjectReference Include="..\Avito.Infrastructure\Avito.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -1,20 +1,21 @@
-﻿using Avito.Infrastructure.Auth.Interfaces;
+﻿using Avito.Infrastructure;
+using Avito.Infrastructure.Auth.Interfaces;
 using Avito.Logic.Models;
 using Avito.Logic.Stores;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Avito.Infrastructure.Store
+namespace Avito.Application.Store
 {
     public class UserStore : BaseStore, IUserStore
     {
-     
 
-        public UserStore(AvitoDbContext context,IPasswordHasher passwordHasher) : base(context) {
-          
+
+        public UserStore(AvitoDbContext context, IPasswordHasher passwordHasher) : base(context)
+        {
         }
 
-      
+
 
         public async Task Add(User user)
         {
@@ -24,14 +25,14 @@ namespace Avito.Infrastructure.Store
 
         public async Task Delete(User user)
         {
-             _context.Users.Remove(user);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<User>> Get()
         {
             var users = _context.Users;
-            return await  users.AsNoTracking().ToListAsync();
+            return await users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User?> GetByEmail(string email)
@@ -42,7 +43,7 @@ namespace Avito.Infrastructure.Store
 
         public async Task<User?> GetById(int id)
         {
-            User? user =await  _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
         public async Task<int> GetRoleIdUser()
@@ -50,14 +51,14 @@ namespace Avito.Infrastructure.Store
             Role? role = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(u => u.Name == "user");
             return role.Id;
         }
-     
+
 
         public Task Update(User user)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<int> GetUserIdFromJwt(string token)
+        public  int GetUserIdFromJwt(string token)
         {
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(token);
@@ -67,10 +68,10 @@ namespace Avito.Infrastructure.Store
             return tokenUserId;
         }
 
-       public async Task<bool> VerifyUser(int tokenUserId, int userId)
+        public  bool VerifyUser(int tokenUserId, int userId)
         {
-        
-            return tokenUserId == userId; 
+
+            return tokenUserId == userId;
         }
 
     }

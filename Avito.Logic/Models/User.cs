@@ -7,11 +7,12 @@
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public int RoleId { get; set; }
+        public string TelegramChatId { get; set; } = string.Empty;
 
         public Role? Role;
 
         public IList<Product>? Products = null;
-
+        public IList<WishListItem>? WishLists = null;
         public User()
         {
         }

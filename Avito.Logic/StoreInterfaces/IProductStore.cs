@@ -19,5 +19,6 @@ namespace Avito.Logic.Stores
         Task Delete(int id);
         Task<Product?> GetById(int id);
         Task Update(Product product);
+        Task UpdateProductPriceAsync(int productId, double newPrice);
     }
 }

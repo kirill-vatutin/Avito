@@ -1,23 +1,18 @@
-﻿using Avito.Logic.Models;
+﻿using Avito.Infrastructure;
+using Avito.Logic.Models;
 using Avito.Logic.Stores;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Avito.Infrastructure.Store
+namespace Avito.Application.Store
 {
-    public class ProductStore :BaseStore, IProductStore
+    public class ProductStore : BaseStore, IProductStore
     {
         public ProductStore(AvitoDbContext context) : base(context) { }
-       
+
 
         public async Task Add(Product product)
         {
-           await  _context.Products.AddAsync(product);
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
         }
 
@@ -36,7 +31,7 @@ namespace Avito.Infrastructure.Store
         {
             IQueryable<Product> productsUQue = _context.Products;
             var products = productsUQue.Where(u => u.CategoryId == category.Id);
-            return await  productsUQue.AsNoTracking().ToListAsync();
+            return await productsUQue.AsNoTracking().ToListAsync();
         }
 
         public async Task<Product?> GetById(int id)
@@ -47,8 +42,8 @@ namespace Avito.Infrastructure.Store
 
         public async Task<IEnumerable<Product?>> GetByName(string name)
         {
-            IQueryable<Product> products =  _context.Products.AsNoTracking();
-            var productsList = products.Where(p => EF.Functions.Like(p.Name, $"%{name }%"));
+            IQueryable<Product> products = _context.Products.AsNoTracking();
+            var productsList = products.Where(p => EF.Functions.Like(p.Name, $"%{name}%"));
             return await productsList.ToListAsync();
         }
 
@@ -60,6 +55,28 @@ namespace Avito.Infrastructure.Store
             .SetProperty(u => u.Price, product.Price)
             .SetProperty(u => u.CategoryId, product.CategoryId)
             );
+        }
+
+        public async Task UpdateProductPriceAsync(int productId, double newPrice)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product != null)
+            {
+                product.Price = newPrice;
+                await _context.Products.ExecuteUpdateAsync(s => s
+                .SetProperty(u => u.Price, newPrice));
+                await _context.SaveChangesAsync();
+
+                var usersWithWishList = await _context.WishLists
+                    .Where(w => w.ProductId == productId)
+                    .Select(w => w.User)
+                    .ToListAsync();
+
+                foreach (var user in usersWithWishList)
+                {
+                    //_rabbitMqPublisher.PublishPriceChange(product.Name, newPrice, user.TelegramChatId);
+                }
+            }
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Avito.Logic.Models;
+﻿using Avito.Infrastructure;
+using Avito.Logic.Models;
 using Avito.Logic.Stores;
 using Microsoft.EntityFrameworkCore;
 
-namespace Avito.Infrastructure.Store
+namespace Avito.Application.Store
 {
     public class RoleStore : BaseStore, IRoleStore
     {
@@ -17,8 +18,8 @@ namespace Avito.Infrastructure.Store
 
         public async Task Delete(Role role)
         {
-                _context.Roles.Remove(role);
-                await _context.SaveChangesAsync();
+            _context.Roles.Remove(role);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<Role>> Get()
@@ -39,6 +40,6 @@ namespace Avito.Infrastructure.Store
             .SetProperty(u => u.Name, role.Name));
         }
 
-      
+
     }
 }

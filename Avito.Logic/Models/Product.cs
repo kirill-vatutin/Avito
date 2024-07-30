@@ -20,6 +20,8 @@ namespace Avito.Logic.Models
 
         [JsonIgnore]
         public Category? Category { get; set; }
+        [JsonIgnore]
+        public WishListItem? WishListItem { get; set; }
 
         private Product(string name,string description, double price, int userId, int categoryId)
         {

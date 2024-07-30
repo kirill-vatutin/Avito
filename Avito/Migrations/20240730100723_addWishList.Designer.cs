@@ -2,6 +2,7 @@
 using Avito.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Avito.Migrations
 {
     [DbContext(typeof(AvitoDbContext))]
-    partial class AvitoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240730100723_addWishList")]
+    partial class addWishList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,44 +119,9 @@ namespace Avito.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("TelegramChatId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Avito.Logic.Models.WishListItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("WishLists");
                 });
 
             modelBuilder.Entity("Avito.Logic.Models.Product", b =>
@@ -175,35 +143,9 @@ namespace Avito.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Avito.Logic.Models.WishListItem", b =>
-                {
-                    b.HasOne("Avito.Logic.Models.Product", "Product")
-                        .WithOne("WishListItem")
-                        .HasForeignKey("Avito.Logic.Models.WishListItem", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Avito.Logic.Models.User", "User")
-                        .WithMany("WishLists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Avito.Logic.Models.Product", b =>
-                {
-                    b.Navigation("WishListItem");
-                });
-
             modelBuilder.Entity("Avito.Logic.Models.User", b =>
                 {
                     b.Navigation("Products");
-
-                    b.Navigation("WishLists");
                 });
 #pragma warning restore 612, 618
         }

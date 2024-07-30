@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Avito.Controllers
 {
@@ -46,7 +45,7 @@ namespace Avito.Controllers
             {
                 return Unauthorized("Token is missing!");
             }
-            int userId = await _userRepository.GetUserIdFromJwt(token);
+            int userId = _userRepository.GetUserIdFromJwt(token);
             Product product = Product.Create(productRequest.Name, productRequest.Description, productRequest.Price, userId, productRequest.CategoryId);
             await _repository.Add(product);
             return Ok(product);
@@ -61,8 +60,8 @@ namespace Avito.Controllers
             {
                 return NotFound();
             }
-            int userId = await _userRepository.GetUserIdFromJwt(Request.Cookies["tasty"]);
-            var isVerify =await  _userRepository.VerifyUser(userId, product.UserId); 
+            int userId = _userRepository.GetUserIdFromJwt(Request.Cookies["tasty"]);
+            var isVerify =_userRepository.VerifyUser(userId, product.UserId); 
             if (!isVerify) {
                 return Unauthorized();
             }
@@ -83,8 +82,8 @@ namespace Avito.Controllers
             {
                 return NotFound();
             }
-            var userId =await  _userRepository.GetUserIdFromJwt(Request.Cookies["tasty"]);
-            var isVerify = await _userRepository.VerifyUser(userId, product.UserId);
+            var userId =_userRepository.GetUserIdFromJwt(Request.Cookies["tasty"]);
+            var isVerify =  _userRepository.VerifyUser(userId, product.UserId);
             if (!isVerify)
             {
                 return Unauthorized();

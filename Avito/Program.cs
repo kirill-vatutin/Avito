@@ -1,8 +1,8 @@
+using Avito.Application.Store;
 using Avito.Infrastructure;
 using Avito.Infrastructure.Auth;
 using Avito.Infrastructure.Auth.Interfaces;
 using Avito.Infrastructure.Services;
-using Avito.Infrastructure.Store;
 using Avito.Logic.Stores;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -64,14 +64,14 @@ services.AddDbContext<AvitoDbContext>(
 
 
 services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
