@@ -1,3 +1,5 @@
+# Общий игнорируемый шаблон для ASP.NET Core
+
 # .NET Core
 bin/
 obj/
@@ -11,7 +13,7 @@ out/
 *.nupkg
 packages/
 
-# Отлаживаемые файлы и временные фалы
+# Отлаживаемые файлы и временные файлы
 *.user
 *.suo
 *.sln.docstates
@@ -30,9 +32,9 @@ packages/
 **/bin/
 **/obj/
 
-# Файлы конфигурации
-appsettings.json
-appsettings.*.json
+# Игнорирование файла appsettings.json в подкаталоге Avito
+Avito/appsettings.json
+Avito/appsettings.*.json
 
 # И другие файлы конфигурации, которые могут содержать конфиденциальную информацию
 *.env
@@ -49,17 +51,4 @@ docker-compose.yml
 TestResults/
 *.TestResults
 
-# Файлы резервных копий
-*~ 
-*.bak
-*.swp
-
-# Временные файлы редактора
-*.tmp
-
-# Макеты VS Code
-.vscode/
-
-# Удалите, если вам нужно хранить рабочие среды в репозитории
-# *.sln
-# *.csproj.user
+#
