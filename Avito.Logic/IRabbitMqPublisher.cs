@@ -2,6 +2,6 @@
 {
     public interface IRabbitMqPublisher
     {
-        void PublishPriceChange(string productName, decimal newPrice, string chatId);
+        void PublishPriceChange(string productName, double newPrice, string chatId);
     }
 }

@@ -12,7 +12,7 @@ public class RabbitMqPublisher : IRabbitMqPublisher
         _factory = factory;
     }
 
-    public void PublishPriceChange(string productName, decimal newPrice, string chatId)
+    public void PublishPriceChange(string productName, double newPrice, string chatId)
     {
         using (var connection = _factory.CreateConnection())
         using (var channel = connection.CreateModel())

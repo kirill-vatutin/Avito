@@ -7,7 +7,15 @@ namespace Avito.Application.Store
 {
     public class ProductStore : BaseStore, IProductStore
     {
-        public ProductStore(AvitoDbContext context) : base(context) { }
+
+        private readonly IRabbitMqPublisher _rabbitMqPublisher;
+
+        public ProductStore(
+            AvitoDbContext context,
+            IRabbitMqPublisher rabbitMqPublisher) : base(context)
+        {
+            _rabbitMqPublisher = rabbitMqPublisher;
+        }
 
 
         public async Task Add(Product product)
@@ -59,24 +67,47 @@ namespace Avito.Application.Store
 
         public async Task UpdateProductPriceAsync(int productId, double newPrice)
         {
-            var product = await _context.Products.FindAsync(productId);
+            var product = await _context.Products.FirstOrDefaultAsync(u => u.Id == productId);
             if (product != null)
             {
-                product.Price = newPrice;
+                
                 await _context.Products.ExecuteUpdateAsync(s => s
                 .SetProperty(u => u.Price, newPrice));
                 await _context.SaveChangesAsync();
 
-                var usersWithWishList = await _context.WishLists
-                    .Where(w => w.ProductId == productId)
-                    .Select(w => w.User)
+                IQueryable<WishlistItem> usersWithWishListQuaryable = _context.WishLists
+                    .Where(w => w.ProductId == productId);
+                var usersWithWishList = await usersWithWishListQuaryable.
+                    Select(w => w.User)
                     .ToListAsync();
 
                 foreach (var user in usersWithWishList)
                 {
-                    //_rabbitMqPublisher.PublishPriceChange(product.Name, newPrice, user.TelegramChatId);
+                    if (!string.IsNullOrEmpty(user.TelegramChatId))
+                        _rabbitMqPublisher.PublishPriceChange(product.Name, newPrice, user.TelegramChatId);
                 }
             }
+        }
+
+        public async Task AddWishList(int id,int userId)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(u => u.Id == id);
+            if (product != null)
+            {
+                WishlistItem wishlist = new WishlistItem
+                {
+                    ProductId = product.Id,
+                    UserId = userId,
+                    Name = product.Name,
+                };
+                _context.WishLists.Add(wishlist);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<WishlistItem>> GetWishList()
+        {
+            return await _context.WishLists.ToListAsync();
         }
     }
 }

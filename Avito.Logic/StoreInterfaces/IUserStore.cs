@@ -23,5 +23,6 @@ namespace Avito.Logic.Stores
 
         bool VerifyUser(int tokenUserId, int userId);
         int GetUserIdFromJwt(string token);
+        Task UpdateTelegramChatId(int userId, string chatId);
     }
 }

@@ -76,5 +76,14 @@ namespace Avito.Controllers
             return Ok();
 
         }
+
+        [HttpPatch("{telegram_chat_id}")]
+        [Authorize(Policy = "UserOnly")]
+        public async Task<ActionResult> UpdateTelegramChatId(string chatId)
+        {
+            int userId = _repository.GetUserIdFromJwt(Request.Cookies["tasty"]);
+            await _repository.UpdateTelegramChatId(userId,chatId);
+            return Ok();
+        }
     }
 }

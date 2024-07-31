@@ -1,4 +1,6 @@
 ﻿using Avito.Infrastructure.Auth.Interfaces;
+using Avito.Infrastructure.Contracts.User;
+using Avito.Infrastructure.Enums;
 using Avito.Logic.Models;
 using Avito.Logic.Stores;
 
@@ -33,21 +35,21 @@ namespace Avito.Infrastructure.Services
             User user = User.Create(firstName, lastName, email, hashedPassword, roleId);
             await _userRepository.Add(user);
         }
-        public async Task<string> Login(string email,string password)
+        public async Task<LoginUserResponse> Login(string email,string password)
         {
             var user = await _userRepository.GetByEmail(email); 
             if (user == null)
             {
-                return "0";
+                return new LoginUserResponse { Status = LoginStatus.UserNotFound };
             }
-            var result = _passwordHasher.Verify(password, user.PasswordHash);
-            if (result == false)
+            var isPasswordValid = _passwordHasher.Verify(password, user.PasswordHash);
+            if (isPasswordValid == false)
             {
-                return "-1";
+                return new LoginUserResponse { Status = LoginStatus.InvalidPasswod };
             }
             var token = _jwtProvider.GenerateToken(user);
 
-            return token;
+            return new LoginUserResponse { Status = LoginStatus.Success, Token = token };
         }
     }
 }

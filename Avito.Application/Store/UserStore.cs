@@ -74,5 +74,13 @@ namespace Avito.Application.Store
             return tokenUserId == userId;
         }
 
+        public async Task UpdateTelegramChatId(int userId, string chatId)
+        {
+            await _context.Users
+                 .Where(u => u.Id == userId)
+                 .ExecuteUpdateAsync(s => s
+                 .SetProperty(u => u.TelegramChatId, chatId));
+            await _context.SaveChangesAsync();
+        }
     }
 }

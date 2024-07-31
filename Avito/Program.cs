@@ -1,3 +1,4 @@
+using Avito.Application;
 using Avito.Application.Store;
 using Avito.Infrastructure;
 using Avito.Infrastructure.Auth;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,8 +46,16 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy => policy.RequireClaim("RoleId", "1"));
     options.AddPolicy("UserOnly", policy => policy.RequireClaim("RoleId", "2"));
 });
-
-
+builder.Services.AddSingleton<IConnectionFactory>(sp =>
+{
+    return new ConnectionFactory()
+    {
+        HostName = "localhost", // Замените на свой хост, если необходимо
+        UserName = "guest",     // Имя пользователя
+        Password = "guest",     // Пароль
+    };
+});
+services.AddTransient<IRabbitMqPublisher, RabbitMqPublisher>();
 services.AddScoped<ICategoryStore, CategoryStore>();
 services.AddScoped<IRoleStore, RoleStore>();
 services.AddScoped<IProductStore, ProductStore>();
@@ -55,6 +65,7 @@ services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 services.AddScoped<UsersService>();
 services.AddScoped<IJwtProvider, JwtProvider>();
 services.AddScoped<IPasswordHasher, PasswordHasher>();
+
 
 // Add services to the container.
 string? connection =

@@ -20,5 +20,7 @@ namespace Avito.Logic.Stores
         Task<Product?> GetById(int id);
         Task Update(Product product);
         Task UpdateProductPriceAsync(int productId, double newPrice);
+        Task AddWishList(int id,int userId);
+        Task<IEnumerable<WishlistItem>> GetWishList();
     }
 }

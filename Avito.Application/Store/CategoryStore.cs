@@ -28,9 +28,6 @@ namespace Avito.Application.Store
             return categories;
         }
 
-        Task<IReadOnlyList<Category>> ICategoryStore.Get()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

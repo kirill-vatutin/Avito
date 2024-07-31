@@ -10,12 +10,12 @@ namespace Avito.Infrastructure
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
 
-        public DbSet<WishListItem> WishLists { get; set; } = null!;
+        public DbSet<WishlistItem> WishLists { get; set; } = null!;
 
         public AvitoDbContext(DbContextOptions<AvitoDbContext> options)
             : base(options)
         {
-          
+
 
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,19 +26,16 @@ namespace Avito.Infrastructure
 
 
             modelBuilder.Entity<User>()
-              .HasMany(u => u.Products) 
-              .WithOne(p => p.User) 
+              .HasMany(u => u.Products)
+              .WithOne(p => p.User)
               .HasForeignKey(p => p.UserId);
 
             modelBuilder.Entity<User>()
-             .HasMany(u => u.WishLists)
+             .HasMany(u => u.WishList)
              .WithOne(p => p.User)
              .HasForeignKey(p => p.UserId);
 
-            modelBuilder.Entity<WishListItem>()
-                .HasOne(u=>u.Product)
-                .WithOne(p=>p.WishListItem)
-                .HasForeignKey<WishListItem>(p => p.ProductId);
+
 
 
 
@@ -48,6 +45,6 @@ namespace Avito.Infrastructure
             modelBuilder.Entity<Category>().HasKey(k => k.Id);
 
         }
-       
+
     }
 }

@@ -4,7 +4,7 @@ namespace Avito.Logic.Models
 {
     public class Product : BaseEntity
     {
-      
+
 
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -20,10 +20,8 @@ namespace Avito.Logic.Models
 
         [JsonIgnore]
         public Category? Category { get; set; }
-        [JsonIgnore]
-        public WishListItem? WishListItem { get; set; }
 
-        private Product(string name,string description, double price, int userId, int categoryId)
+        private Product(string name, string description, double price, int userId, int categoryId)
         {
             Name = name;
             Description = description;
@@ -32,9 +30,9 @@ namespace Avito.Logic.Models
             CategoryId = categoryId;
         }
 
-        public static Product Create(string name,string description,double price,int userId,int categoryId)
+        public static Product Create(string name, string description, double price, int userId, int categoryId)
         {
-            return new Product(name,description, price, userId, categoryId);
+            return new Product(name, description, price, userId, categoryId);
         }
 
     }

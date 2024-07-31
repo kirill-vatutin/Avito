@@ -12,7 +12,7 @@
         public Role? Role;
 
         public IList<Product>? Products = null;
-        public IList<WishListItem>? WishLists = null;
+        public IList<WishlistItem>? WishList= null;
         public User()
         {
         }
